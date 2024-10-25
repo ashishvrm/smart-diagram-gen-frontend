@@ -1,5 +1,6 @@
 // frontend/services/api.js
 import axios from 'axios';
+import { saveGeneratedImage } from './firebaseService';
 
 const API_URL = 'http://localhost:5000'; // Your backend URL
 
@@ -37,7 +38,9 @@ export const generateImage = async (inputText) => {
           '',
         ),
       );
-      return { imageData: `data:image/png;base64,${base64}` };
+      const imageData = `data:image/png;base64,${base64}`;
+      const imageUrl = await saveGeneratedImage(imageData, inputText);
+      return { imageData, imageUrl };
     } else {
       throw new Error('No image data received from the server');
     }

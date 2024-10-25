@@ -1,18 +1,20 @@
 // frontend/firebase.js
-import firebase from 'firebase/app';
-import 'firebase/auth';
-import 'firebase/firestore';
+import { initializeApp } from 'firebase/app';
+import { getAuth } from 'firebase/auth';
+import { getFirestore } from 'firebase/firestore';
+import { getStorage } from 'firebase/storage';
 
 const firebaseConfig = {
-  apiKey: 'YOUR_API_KEY',
-  authDomain: 'YOUR_AUTH_DOMAIN',
-  projectId: 'YOUR_PROJECT_ID',
-  // Add other config options
+    apiKey: "AIzaSyBigStJNqXODeWEO9eItSGHbC-uXur3VVc",
+    authDomain: "smart-diagram-gen-eea1d.firebaseapp.com",
+    projectId: "smart-diagram-gen-eea1d",
+    storageBucket: "smart-diagram-gen-eea1d.appspot.com",
+    messagingSenderId: "618288935612",
+    appId: "1:618288935612:web:5215618cfec9f189a416b9"
 };
 
-if (!firebase.apps.length) {
-  firebase.initializeApp(firebaseConfig);
-}
+const app = initializeApp(firebaseConfig);
 
-export const auth = firebase.auth();
-export const db = firebase.firestore();
+export const auth = getAuth(app);
+export const db = getFirestore(app);
+export const storage = getStorage(app);

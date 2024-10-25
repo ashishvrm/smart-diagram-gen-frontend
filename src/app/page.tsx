@@ -1,13 +1,28 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { generateImage } from "../../services/api";
+import { getGeneratedImages } from "../../services/firebaseService";
 
 export default function Home() {
   const [inputText, setInputText] = useState("");
   const [generatedImages, setGeneratedImages] = useState<string[]>([]);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
+  const [collageImages, setCollageImages] = useState<any[]>([]);
+
+  useEffect(() => {
+    fetchCollageImages();
+  }, []);
+
+  const fetchCollageImages = async () => {
+    try {
+      const images = await getGeneratedImages(12);
+      setCollageImages(images);
+    } catch (error) {
+      console.error("Error fetching collage images:", error);
+    }
+  };
 
   const handleGenerateImage = async () => {
     setIsLoading(true);
@@ -19,6 +34,7 @@ export default function Home() {
           setCurrentImageIndex(newImages.length - 1);
           return newImages;
         });
+        fetchCollageImages(); // Refresh the collage after generating a new image
       } else {
         throw new Error('No image data received from the server');
       }
@@ -86,6 +102,18 @@ export default function Home() {
             </div>
           </div>
         )}
+
+        <h3 className="text-2xl font-bold mt-12 mb-4 text-black">Previously Generated Images</h3>
+        <div className="grid grid-cols-3 gap-4">
+          {collageImages.map((image) => (
+            <img
+              key={image.id}
+              src={image.imageUrl}
+              alt={image.prompt}
+              className="w-full h-32 object-cover rounded-lg"
+            />
+          ))}
+        </div>
       </div>
     </div>
   );
